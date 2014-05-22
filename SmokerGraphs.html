@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Smokin' Graphs</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="Chart.js"></script>
+		<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+	</head>
+	<body>
+		<h2>Temperature graphs</h2>
+		<canvas id="tcCanvas" height="450" width="600">Please get a modern browser, if you had one, the smoker temperature would be graphed here.</canvas>
+		<canvas id="fanCanvas" height="450" width="600">Ditto, but this is the fan speed.</canvas>
+		<script type="text/javascript">
+		var tcArray = [];
+		var fanArray = [];
+		var lblArray = [];
+		var count = 0;
+		var tcctx = document.getElementById('tcCanvas').getContext('2d');
+		var fanctx = document.getElementById('fanCanvas').getContext('2d');
+
+		function init(){
+				draw();
+				setInterval(draw,10000);
+			}
+		function draw(){
+			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/tctemp?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
+				tcArray.push(result["result"]);
+				lblArray.push(count);
+				count++;
+			});
+			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/output?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
+				fanArray.push(result["result"]/255);
+			});
+
+				
+			var lineChartData = {
+				labels : lblArray,
+				datasets : [
+					{
+						fillColor : "rgba(191,84,46,0.5)",
+						strokeColor : "rgba(191,84,46,1)",
+						pointColor : "rgba(191,84,46,1)",
+						pointStrokeColor : "#fff",
+						data : tcArray
+					}
+
+				]
+				
+			}
+			var fanChartData = {
+				labels : lblArray,
+				datasets : [
+					{
+						fillColor : "rgba(151,187,205,0.5)",
+						strokeColor : "rgba(151,187,205,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						data : fanArray
+					}
+				]
+			}
+
+			var myLine = new Chart(tcctx).Line(lineChartData);
+			var fanLine = new Chart(fanctx).Line(fanChartData);
+			
+			if (lblArray.length > 360)
+			{
+				lblArray.shift();
+				tcArray.shift();
+				fanArray.shitf();
+			}
+		}
+
+		init();
+		</script>
+	</body>
+</html>
