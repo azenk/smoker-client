@@ -17,13 +17,14 @@
 		var count = 0;
 		var tcctx = document.getElementById('tcCanvas').getContext('2d');
 		var fanctx = document.getElementById('fanCanvas').getContext('2d');
-		var records = 90;
+		var records = 360;
+		var updateinterval = 5.0; 
 
 		function init(){
 				updateArrays();
 				draw();
-				setInterval(draw,1000);
-				setInterval(updateArrays,1000);
+				setInterval(draw, updateinterval * 1000);
+				setInterval(updateArrays, updateinterval * 1000);
 		}
 
 		function variableURL(variablename){
@@ -35,7 +36,7 @@
 		function updateArrays(){
 			$.getJSON(variableURL("tctemp"),function(result){
 				tcArray.push(result["result"]);
-				if (count % 10 == 0){
+				if (count % (records / 10) == 0){
 					var d = new Date();
 					lblArray.push(d.toLocaleTimeString());
 				} else {
