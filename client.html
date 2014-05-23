@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Smoker</title>
+        <meta http-equiv="refresh" content="30" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="smoker.js"></script>
+    </head>
+
+    <body>
+        <div>
+            <p class="pid-output">The output is </p>
+            <p class="pid-output-raw">The raw output is </p>
+            <p class="pid-i">The integral value is </p>
+            <p class="pid-d">The differential value is </p>
+            <p class="ambient-temp">The ambient temp is </p>
+            <p class="smoker-temp">The smoker temp is </p>
+	    <p>
+		<div class="pid-kp">Kp: </div>
+		<div class="pid-ki">Ki: </div>
+		<div class="pid-kd">Kd: </div>
+		<div class="pid-sp">Setpoint: </div>
+	    </p>
+        </div>
+
+	<form action="https://api.spark.io/v1/devices/48ff6b065067555023151787/newsetpoint" method="POST">
+		<input type="hidden" name="access_token" value="1451c88ec0c225eb59e8474d3b986c595ca3d111" />
+		<input name="args" />
+		<input type="submit" />
+	</form>
+	<form action="https://api.spark.io/v1/devices/48ff6b065067555023151787/retune" method="POST">
+		<input type="hidden" name="access_token" value="1451c88ec0c225eb59e8474d3b986c595ca3d111" />
+		<input name="args" />
+		<input type="submit" />
+	</form>
+    </body>
+</html>
