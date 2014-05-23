@@ -12,26 +12,41 @@
 		<script type="text/javascript">
 		var tcArray = [];
 		var fanArray = [];
+		var spArray = [];
 		var lblArray = [];
 		var count = 0;
 		var tcctx = document.getElementById('tcCanvas').getContext('2d');
 		var fanctx = document.getElementById('fanCanvas').getContext('2d');
+		var records = 90;
 
 		function init(){
+				updateArrays();
 				draw();
-				setInterval(draw,10000);
-			}
-		function draw(){
+				setInterval(draw,1000);
+				setInterval(updateArrays,1000);
+		}
+		function updateArrays(){
 			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/tctemp?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
 				tcArray.push(result["result"]);
 				lblArray.push(count);
 				count++;
 			});
 			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/output?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
-				fanArray.push(result["result"]/255);
+				fanArray.push(result["result"]/255 * 100);
 			});
+			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/setpoint?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
+				spArray.push(result["result"]);
+			});
+			if (lblArray.length > records && tcArray.length > records && fanArray.length > records && spArray.length > records)
+			{
+				lblArray.shift();
+				tcArray.shift();
+				fanArray.shift();
+				spArray.shift();
+			}
 
-				
+		}
+		function draw(){
 			var lineChartData = {
 				labels : lblArray,
 				datasets : [
@@ -40,7 +55,13 @@
 						strokeColor : "rgba(191,84,46,1)",
 						pointColor : "rgba(191,84,46,1)",
 						pointStrokeColor : "#fff",
+						animation : false,
+						bezierCurve : false,
 						data : tcArray
+					},
+					{
+						strokeColor : "rgba(0,0,0,1)",
+						data : spArray
 					}
 
 				]
@@ -59,15 +80,17 @@
 				]
 			}
 
-			var myLine = new Chart(tcctx).Line(lineChartData);
-			var fanLine = new Chart(fanctx).Line(fanChartData);
+			var chartoptions = {
+				animation : false,
+				bezierCurve : false,
+				datasetFill : false,
+				pointDot : false
+				}
+				
+
+			var myLine = new Chart(tcctx).Line(lineChartData, chartoptions);
+			var fanLine = new Chart(fanctx).Line(fanChartData, chartoptions);
 			
-			if (lblArray.length > 360)
-			{
-				lblArray.shift();
-				tcArray.shift();
-				fanArray.shitf();
-			}
 		}
 
 		init();
