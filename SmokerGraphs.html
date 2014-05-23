@@ -25,8 +25,15 @@
 				setInterval(draw,1000);
 				setInterval(updateArrays,1000);
 		}
+
+		function variableURL(variablename){
+			var device = "48ff6b065067555023151787";
+			var access_token = "1451c88ec0c225eb59e8474d3b986c595ca3d111";
+			return "https://api.spark.io/v1/devices/".concat( device, "/", variablename, "?access_token=", access_token);
+		}
+
 		function updateArrays(){
-			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/tctemp?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
+			$.getJSON(variableURL("tctemp"),function(result){
 				tcArray.push(result["result"]);
 				if (count % 10 == 0){
 					var d = new Date();
@@ -36,12 +43,15 @@
 				}
 				count++;
 			});
-			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/output?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
+
+			$.getJSON(variableURL("output"),function(result){
 				fanArray.push(result["result"]/255 * 100);
 			});
-			$.getJSON("https://api.spark.io/v1/devices/48ff6b065067555023151787/setpoint?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111",function(result){
+
+			$.getJSON(variableURL("setpoint"),function(result){
 				spArray.push(result["result"]);
 			});
+
 			if (lblArray.length > records && tcArray.length > records && fanArray.length > records && spArray.length > records)
 			{
 				lblArray.shift();
