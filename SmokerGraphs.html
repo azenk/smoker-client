@@ -47,7 +47,7 @@
 
 			$.getJSON(variableURL("output"),function(result){
 				var output_pct = result["result"]/255 * 100;
-				if (output_pct <= 100 and output_pct >= 0){
+				if (output_pct <= 100 && output_pct >= 0){
 					fanArray.push(output_pct);
 				}
 			});
