@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Smokin' Graphs</title>
@@ -8,11 +9,23 @@
 		<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
 	</head>
 	<body>
-		<div id="chartContainer" style="height:300px; width: 100%;"></div>
+		<div id="tempChartContainer" style="height:300px; width: 100%;"></div>
 		<div id="currentStatus">
 			<div id="tcTemp"></div>
 			<div id="coldTemp"></div>
 			<div id="setTemp"></div>
 		</div>
+		<form name="setTempForm" action="" method="" id="setTempForm">
+			New Setpoint: <input name="args" type="text" class="inputClass"/>
+			<input type="submit" id="tempSubmit" />
+		</form>
+		<form name="pidParmForm" action="" method="" id="pidParmForm">
+			Kp: <input name="kpArg" type="text" class="inputClass"/>
+			Ki: <input name="kiArg" type="text" class="inputClass"/>
+			Kd: <input name="kdArg" type="text" class="inputClass"/>
+			<input type="submit" id="pidSubmit" />
+		</form>
+		<div class="clearBoth"></div>
+		<div id="fanChartContainer" style="height:300px; width:100%;"></div>
 	</body>
 </html>
