@@ -5,7 +5,11 @@ $(document).ready(function() {
 	var fanArray = [];
 
 	var records = 360;
-	var updateinterval = 5.0; 
+	var updateinterval = 5.0;
+
+	var bufferedKp;
+	var bufferedKi;
+	var bufferedKd;
 	
 	// Chart initialization
 	var tempChart = new CanvasJS.Chart("tempChartContainer",{
@@ -173,21 +177,33 @@ $(document).ready(function() {
 	
 	function updatePID()
 	{
+		var bufferedKp;
+	var bufferedKi;
+	var bufferedKd;
 		$.ajax({
 			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/kp?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
 		}).then(function(data) {
-			document.forms["pidParmForm"]["kpArg"].value = data.result;
+			if (bufferedKp != data.result){
+				bufferedKp = data.result;
+				document.forms["pidParmForm"]["kpArg"].value = bufferedKp;
+			}
 		});
 
 		$.ajax({
 			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/ki?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
 		}).then(function(data) {
-		   document.forms["pidParmForm"]["kiArg"].value = data.result;
+			if (bufferedKi != data.result){
+				bufferedKi = data.result;
+				document.forms["pidParmForm"]["kiArg"].value = bufferedKi;
+			}
 		});
 		$.ajax({
 			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/kd?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
 		}).then(function(data) {
-		   document.forms["pidParmForm"]["kdArg"].value = data.result;
+			if (bufferedKd != data.result){
+				bufferedKd = data.result;
+				document.forms["pidParmForm"]["kdArg"].value = data.result;
+		   }
 		});
 	}
 	
