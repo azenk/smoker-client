@@ -37,7 +37,7 @@ $(document).ready(function() {
 	var fanChart = new CanvasJS.Chart("fanChartContainer",{
 		title: {text: "Fan Output"},
 		axisX: {title: "Timestamp", titleFontSize: 20},
-		axisY: {suffix: " %"},
+		axisY: {title: "Percent", suffix: " %"},
 		zoomEnabled: true,
 		
 		data: [{
