@@ -177,9 +177,6 @@ $(document).ready(function() {
 	
 	function updatePID()
 	{
-		var bufferedKp;
-	var bufferedKi;
-	var bufferedKd;
 		$.ajax({
 			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/kp?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
 		}).then(function(data) {
