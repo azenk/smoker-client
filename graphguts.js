@@ -180,15 +180,15 @@ $(document).ready(function() {
 		
 		// Food temperatures
 		$.getJSON(variableURL("foodtemp1"),function(result){
-			var foodtemp1_pct = result["result"];
-			if (foodtemp1_pct <= 500 && foodtemp1 >= 0){
-				foodArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp1_pct});
+			var foodtemp1 = result["result"];
+			if (foodtemp1 <= 500 && foodtemp1 >= 0){
+				foodArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp1});
 			}
 		});
 		$.getJSON(variableURL("foodtemp2"),function(result){
-			var foodtemp2_pct = result["result"];
-			if (foodtemp2_pct <= 500 && foodtemp1 >= 0){
-				food2Array.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp2_pct});
+			var foodtemp2 = result["result"];
+			if (foodtemp2 <= 500 && foodtemp2 >= 0){
+				food2Array.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp2});
 			}
 		});
 		// Enclosure temperature
