@@ -8,7 +8,7 @@ $(document).ready(function() {
 	var food2Array = [];
 
 	var records = 360;
-	var updateinterval = 5.0;
+	var updateinterval = 10.0;
 
 	var bufferedKp;
 	var bufferedKi;
