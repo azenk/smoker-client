@@ -3,6 +3,9 @@ $(document).ready(function() {
 	var tcArray = [];
 	var spArray = [];
 	var fanArray = [];
+	var fireArray = [];
+	var foodArray = [];
+	var food2Array = [];
 
 	var records = 360;
 	var updateinterval = 5.0;
@@ -30,19 +33,34 @@ $(document).ready(function() {
 			showInLegend: true, 
 			legendText: "Set Point",
 			dataPoints : spArray
+		},{
+			type: "line",
+			showInLegend: true,
+			legendText: "Food Temp",
+			dataPoints : foodArray
 		}
 		]
 	  });
 	  
 	var fanChart = new CanvasJS.Chart("fanChartContainer",{
-		title: {text: "Fan Output"},
+		title: {text: "Fan Output & Firebox Temperature"},
 		axisX: {title: "Timestamp", titleFontSize: 20},
 		axisY: {title: "Percent", suffix: " %"},
+		axisY2: {title: "Temperature", suffix: " C"},
+		legend: {verticalAlign: "bottom"},
 		zoomEnabled: true,
 		
 		data: [{
 			type: "line",
-			dataPoints: fanArray
+			showInLegend: true,
+			dataPoints: fanArray,
+			legendText: "Fan"
+			},{
+			type: "line",
+			showInLegend: true,
+			axisYType: "secondary",
+			dataPoints: fireArray,
+			legendText: "Firebox"
 			}]
 	});
 	
@@ -154,6 +172,25 @@ $(document).ready(function() {
 			}
 		});
 		
+		// Firebox temperature
+		$.getJSON(variableURL("firetemp"),function(result){
+			var firetemp_pct = result["result"];
+			fireArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: firetemp_pct});
+			});
+		
+		// Food temperatures
+		$.getJSON(variableURL("foodtemp1"),function(result){
+			var foodtemp1_pct = result["result"];
+			if (foodtemp1_pct <= 500 && foodtemp1 >= 0){
+				foodArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp1_pct});
+			}
+		});
+		$.getJSON(variableURL("foodtemp2"),function(result){
+			var foodtemp2_pct = result["result"];
+			if (foodtemp2_pct <= 500 && foodtemp1 >= 0){
+				food2Array.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp2_pct});
+			}
+		});
 		// Enclosure temperature
 		$.getJSON(variableURL("coldtemp"),function(result){
 			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(result["result"],2) + " &deg;C";
@@ -165,10 +202,14 @@ $(document).ready(function() {
 			tcArray.shift();
 			fanArray.shift();
 			spArray.shift();
+			fireArray.shift();
+			foodArray.shift();
+			food2Array.shift();
 		}
 
 	}
 	
+
 	//Update functions
 	function updateCharts(){
 		tempChart.render();
