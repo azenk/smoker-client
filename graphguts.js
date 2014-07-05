@@ -6,9 +6,13 @@ $(document).ready(function() {
 	var fireArray = [];
 	var foodArray = [];
 	var food2Array = [];
+	
+	var foodSetArray = [];
+	var foodBufferTemp;
 
 	var records = 360;
 	var updateinterval = 10.0;
+	var slowUpdateInterval = 60.0;
 
 	var bufferedKp;
 	var bufferedKi;
@@ -38,6 +42,16 @@ $(document).ready(function() {
 			showInLegend: true,
 			legendText: "Food Temp",
 			dataPoints : foodArray
+		},{
+			type: "line",
+			showInLegend: true,
+			legendText: "Food Temp 2",
+			dataPoints : food2Array
+		},{
+			type: "line",
+			showInLegend: true,
+			legendText: "Food Set Temp",
+			dataPoints: foodSetArray
 		}
 		]
 	  });
@@ -125,14 +139,28 @@ $(document).ready(function() {
 					alert('Update failed');
 				}
 			});
-		})
+		});
+	
+	// Food setpoint submit
+	$('#foodSubmit').click(function(e)
+	{
+		//prevent reloading of page
+		e.preventDefault();
 		
+		var foodSetTemp = document.forms["foodTempForm"]["foodtemparg"].value;
+		
+		// only submit if the temperature is above 0 C
+		if (parseFloat(foodSetTemp) > 0 ){
+			foodBufferTemp = parseFloat(foodSetTemp);
+		}
+	});
+	
 	function init(){
 			updateArrays();
 			updateCharts();
 			updatePID();
 			
-			setInterval(updatePID, updateinterval * 2000);
+			setInterval(updatePID, slowUpdateInterval * 1000);
 			setInterval(updateCharts, updateinterval * 1000);
 			setInterval(updateArrays, updateinterval * 1000);
 	}
@@ -183,14 +211,22 @@ $(document).ready(function() {
 			var foodtemp1 = result["result"];
 			if (foodtemp1 <= 500 && foodtemp1 >= 0){
 				foodArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp1});
+				document.getElementById("foodTemp").innerHTML = "Current food temp: " + precise_round(foodtemp1,2) + " &deg;C";
+				
+				//Set temp is held in cache, no ajax call needed
+				if (foodBufferTemp >= 0){
+					foodSetArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodBufferTemp});
+					}
 			}
 		});
 		$.getJSON(variableURL("foodtemp2"),function(result){
 			var foodtemp2 = result["result"];
 			if (foodtemp2 <= 500 && foodtemp2 >= 0){
 				food2Array.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp2});
+				document.getElementById("foodTemp2").innerHTML = "Current food 2 temp: " + precise_round(foodtemp2,2) + " &deg;C";
 			}
 		});
+		
 		// Enclosure temperature
 		$.getJSON(variableURL("coldtemp"),function(result){
 			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(result["result"],2) + " &deg;C";
@@ -205,6 +241,7 @@ $(document).ready(function() {
 			fireArray.shift();
 			foodArray.shift();
 			food2Array.shift();
+			foodSetArray.shift();
 		}
 
 	}
