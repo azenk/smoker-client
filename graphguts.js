@@ -11,7 +11,7 @@ $(document).ready(function() {
 	var foodBufferTemp;
 
 	var records = 360;
-	var updateinterval = 10.0;
+	var updateinterval = 1.0;
 	var slowUpdateInterval = 60.0;
 
 	var bufferedKp;
@@ -186,7 +186,7 @@ $(document).ready(function() {
 
 		// Fan output
 		$.getJSON(variableURL("output_pct"),function(result){
-			var output_pct = result["value"]/255 * 100;
+			var output_pct = result["value"];
 			if (output_pct <= 100 && output_pct >= 0){
 				fanArray.push({x: new Date(result["time"]), y: output_pct});
 			}
