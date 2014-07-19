@@ -185,7 +185,7 @@ $(document).ready(function() {
 		});
 
 		// Fan output
-		$.getJSON(variableURL("output"),function(result){
+		$.getJSON(variableURL("output_pct"),function(result){
 			var output_pct = result["value"]/255 * 100;
 			if (output_pct <= 100 && output_pct >= 0){
 				fanArray.push({x: new Date(result["time"]), y: output_pct});
@@ -257,7 +257,7 @@ $(document).ready(function() {
 	function updatePID()
 	{
 		$.ajax({
-			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/kp?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
+			url: variableURL("kp")
 		}).then(function(data) {
 			if (bufferedKp != data.result){
 				bufferedKp = data.result;
@@ -266,7 +266,7 @@ $(document).ready(function() {
 		});
 
 		$.ajax({
-			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/ki?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
+			url: variableURL("ki")
 		}).then(function(data) {
 			if (bufferedKi != data.result){
 				bufferedKi = data.result;
@@ -274,7 +274,7 @@ $(document).ready(function() {
 			}
 		});
 		$.ajax({
-			url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/kd?access_token=1451c88ec0c225eb59e8474d3b986c595ca3d111"
+			url: variableURL("kd")
 		}).then(function(data) {
 			if (bufferedKd != data.result){
 				bufferedKd = data.result;
