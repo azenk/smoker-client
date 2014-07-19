@@ -259,8 +259,8 @@ $(document).ready(function() {
 		$.ajax({
 			url: variableURL("kp")
 		}).then(function(data) {
-			if (bufferedKp != data.result){
-				bufferedKp = data.result;
+			if (bufferedKp != data.value){
+				bufferedKp = data.value;
 				document.forms["pidParmForm"]["kpArg"].value = bufferedKp;
 			}
 		});
@@ -268,17 +268,17 @@ $(document).ready(function() {
 		$.ajax({
 			url: variableURL("ki")
 		}).then(function(data) {
-			if (bufferedKi != data.result){
-				bufferedKi = data.result;
+			if (bufferedKi != data.value){
+				bufferedKi = data.value;
 				document.forms["pidParmForm"]["kiArg"].value = bufferedKi;
 			}
 		});
 		$.ajax({
 			url: variableURL("kd")
 		}).then(function(data) {
-			if (bufferedKd != data.result){
-				bufferedKd = data.result;
-				document.forms["pidParmForm"]["kdArg"].value = data.result;
+			if (bufferedKd != data.value){
+				bufferedKd = data.value;
+				document.forms["pidParmForm"]["kdArg"].value = bufferedKd;
 		   }
 		});
 	}
