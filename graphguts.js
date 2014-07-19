@@ -167,69 +167,70 @@ $(document).ready(function() {
 
 	// helper function to create URLs for JSON calls
 	function variableURL(variablename){
-		var device = "48ff6b065067555023151787";
-		var access_token = "1451c88ec0c225eb59e8474d3b986c595ca3d111";
-		return "https://api.spark.io/v1/devices/".concat( device, "/", variablename, "?access_token=", access_token);
+		//var device = "48ff6b065067555023151787";
+		//var access_token = "1451c88ec0c225eb59e8474d3b986c595ca3d111";
+		//return "https://api.spark.io/v1/devices/".concat( device, "/", variablename, "?access_token=", access_token);
+		return "https://smoker.culinaryapparatus.com/api/values/1/".concat(variablename);
 	}
 
 	// Calls the JSON
 	function updateArrays(){
 		// Smoker temp
 		$.getJSON(variableURL("tctemp"),function(result){
-			var tctemp_pct = result["result"];
+			var tctemp_pct = result["value"];
 			if (tctemp_pct <= 500 && tctemp_pct >= 0) {
-				tcArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: tctemp_pct});
+				tcArray.push({x: new Date(result["time"]), y: tctemp_pct});
 				document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp_pct,2) + " &deg;C";
 			}
 		});
 
 		// Fan output
 		$.getJSON(variableURL("output"),function(result){
-			var output_pct = result["result"]/255 * 100;
+			var output_pct = result["value"]/255 * 100;
 			if (output_pct <= 100 && output_pct >= 0){
-				fanArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: output_pct});
+				fanArray.push({x: new Date(result["time"]), y: output_pct});
 			}
 		});
 
 		// Temperature setpoint
 		$.getJSON(variableURL("setpoint"),function(result){
-			var setpoint_pct = result["result"];
+			var setpoint_pct = result["value"];
 			if (setpoint_pct <= 500 && setpoint_pct >= 0){
-				spArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: setpoint_pct});
+				spArray.push({x: new Date(result["time"]), y: setpoint_pct});
 				document.getElementById("setTemp").innerHTML = "Set temp: " + setpoint_pct + " &deg;C";
 			}
 		});
 		
 		// Firebox temperature
 		$.getJSON(variableURL("firetemp"),function(result){
-			var firetemp_pct = result["result"];
-			fireArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: firetemp_pct});
+			var firetemp_pct = result["value"];
+			fireArray.push({x: new Date(result["time"]), y: firetemp_pct});
 			});
 		
 		// Food temperatures
 		$.getJSON(variableURL("foodtemp1"),function(result){
-			var foodtemp1 = result["result"];
+			var foodtemp1 = result["value"];
 			if (foodtemp1 <= 500 && foodtemp1 >= 0){
-				foodArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp1});
+				foodArray.push({x: new Date(result["time"]), y: foodtemp1});
 				document.getElementById("foodTemp").innerHTML = "Current food temp: " + precise_round(foodtemp1,2) + " &deg;C";
 				
 				//Set temp is held in cache, no ajax call needed
 				if (foodBufferTemp >= 0){
-					foodSetArray.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodBufferTemp});
+					foodSetArray.push({x: new Date(result["time"]), y: foodBufferTemp});
 					}
 			}
 		});
 		$.getJSON(variableURL("foodtemp2"),function(result){
-			var foodtemp2 = result["result"];
+			var foodtemp2 = result["value"];
 			if (foodtemp2 <= 500 && foodtemp2 >= 0){
-				food2Array.push({x: new Date(result["coreInfo"]["last_heard"]), y: foodtemp2});
+				food2Array.push({x: new Date(result["time"]), y: foodtemp2});
 				document.getElementById("foodTemp2").innerHTML = "Current food 2 temp: " + precise_round(foodtemp2,2) + " &deg;C";
 			}
 		});
 		
 		// Enclosure temperature
 		$.getJSON(variableURL("coldtemp"),function(result){
-			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(result["result"],2) + " &deg;C";
+			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(result["value"],2) + " &deg;C";
 		});
 		
 		//cleanup arrays so they don't get too big
