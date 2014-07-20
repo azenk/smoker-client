@@ -10,7 +10,8 @@ $(document).ready(function() {
 	var foodSetArray = [];
 	var foodBufferTemp;
 
-	var records = 360;
+	var records = 1;
+	var cleaninterval = 1800000;
 	var updateinterval = 1.0;
 	var slowUpdateInterval = 60.0;
 
@@ -233,20 +234,35 @@ $(document).ready(function() {
 			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(result["value"],2) + " &deg;C";
 		});
 		
-		//cleanup arrays so they don't get too big
-		if ( tcArray.length > records && fanArray.length > records && spArray.length > records)
-		{
-			tcArray.shift();
-			fanArray.shift();
-			spArray.shift();
-			fireArray.shift();
-			foodArray.shift();
-			food2Array.shift();
-			foodSetArray.shift();
-		}
-
+		//cleanup
+		cleanArrays();
 	}
 	
+	//cleanup function to prevent arrays from getting too big
+	function cleanArrays(){
+		var d = new Date();
+		if (tcArray.length > records && (d - tcArray[0]["x"]) > cleaninterval)
+		{
+			tcArray.shift();
+		}
+		if (fanArray.length > records && (d - fanArray[0]["x"]) > cleaninterval)
+		{
+			fanArray.shift();
+		}
+		if (spArray.length > records && (d - spArray[0]["x"]) > cleaninterval)
+		{
+			spArray.shift();}
+		if (fireArray.length > records && (d - fireArray[0]["x"]) > cleaninterval)
+		{
+			fireArray.shift();}
+		if (foodArray.length > records && (d - foodArray[0]["x"]) > cleaninterval){
+			foodArray.shift();}
+		if (food2Array.length > records && (d - food2Array[0]["x"]) > cleaninterval){
+			food2Array.shift();}
+		if (foodSetArray.length > records && (d - foodSetArray[0]["x"]) > cleaninterval){
+			foodSetArray.shift();}
+		
+	}
 
 	//Update functions
 	function updateCharts(){
