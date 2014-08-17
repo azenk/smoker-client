@@ -1,2 +1,2 @@
-body{font-family:"Arial",sans-serif;} #currentStatus{margin-top:1em;} .inputClass {width:50px; padding:1px;} .clearBoth {clear:both}
-@media all and (min-width:601px){#foodTemp,#tcTemp,#setTempForm { float:left; } #coldTemp,#pidParmForm,#foodTemp2 { float:right; } #setTemp {width:130;margin-left:auto;margin-right:auto;text-align:center;} }
+body{font-family:"Arial",sans-serif;} #currentStatus{margin-top:1em;} .inputClass {width:50px; padding:1px;} .clearBoth {clear:both} #batteryContainer{width:104px;border:1px solid black;margin:2px;} #batteryPercentage{padding:2px;height:10px;background-color:lime}
+@media all and (min-width:601px){#foodTemp,#tcTemp,#setTempForm { float:left; } #coldTemp,#pidParmForm,#foodTemp2,#batteryContainer,#batteryLabel { float:right; } #setTemp {width:130;margin-left:auto;margin-right:auto;text-align:center;} }

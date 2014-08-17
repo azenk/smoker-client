@@ -166,8 +166,10 @@ $(document).ready(function() {
 			updateArrays();
 			updateCharts();
 			updatePID();
+			updateBattery();
 			
 			setInterval(updatePID, slowUpdateInterval * 1000);
+			setInterval(updateBattery, slowUpdateInterval * 1000);
 			setInterval(updateCharts, updateinterval * 1000);
 			setInterval(updateArrays, updateinterval * 1000);
 	}
@@ -178,6 +180,19 @@ $(document).ready(function() {
 		//var access_token = "1451c88ec0c225eb59e8474d3b986c595ca3d111";
 		//return "https://api.spark.io/v1/devices/".concat( device, "/", variablename, "?access_token=", access_token);
 		return "https://smoker.culinaryapparatus.com/api/values/1/".concat(variablename);
+	}
+	function variableSmokerURL(variablename)
+	{
+		return "https://smoker.culinaryapparatus.com/api/smoker/1/".concat(variablename);
+	}
+	// Battery updates
+	function updateBattery()
+	{
+		$.getJSON(variableSmokerURL("power/batterycharge"),function(result){
+			var battery_pct = result["value"];
+			document.getElementById("batteryPercentage").setAttribute("style","width:" + battery_pct + "px");
+			document.getElementById("batteryPercentage").style.width = battery_pct + " px";
+		});
 	}
 
 	// Calls the JSON
