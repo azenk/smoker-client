@@ -96,12 +96,11 @@ $(document).ready(function() {
 			// only submit if the temperature is above 0 C
 			if (parseFloat(temp) > 0 ){
 				$.ajax({
-					url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/newsetpoint",
+					url: "https://smoker.culinaryapparatus.com/api/smoker/1/parameters/setpoint",
 					type:'POST',
 					data:
 					{
-						access_token: 'd03f5d7dc043e5b848e3fbc73dbe2aca1c8af480',
-						args: temp
+						value: temp
 					},
 					success: function()
 					{
@@ -128,22 +127,73 @@ $(document).ready(function() {
 			
 			// input values need to be comma seperated
 			var temp = kp + "," + ki + "," + kd;
+			var update_success = true;
+			var returncount = 0;
 			
 			$.ajax({
-				url: "https://api.spark.io/v1/devices/48ff6b065067555023151787/retune",
+				url: "https://smoker.culinaryapparatus.com/api/smoker/1/parameters/kp",
 				type:'POST',
 				data:
 				{
-					access_token: 'd03f5d7dc043e5b848e3fbc73dbe2aca1c8af480',
-					args: temp
+					value: kp
 				},
 				success: function()
-				{
-					alert('Parameters have been updated');
+				{	
+					update_success = update_success && true;
+					returncount++;
+					if (returncount == 3 && update_success){
+						alert('PID parameters updated');
+					}
 				},
 				fail: function()
 				{
-					alert('Update failed');
+					update_success = false;
+					returncount++;
+					alert('Update failed kp');
+				}
+			});
+			$.ajax({
+				url: "https://smoker.culinaryapparatus.com/api/smoker/1/parameters/ki",
+				type:'POST',
+				data:
+				{
+					value: ki 
+				},
+				success: function()
+				{	
+					update_success = update_success && true;
+					returncount++;
+					if (returncount == 3 && update_success){
+						alert('PID parameters updated');
+					}
+				},
+				fail: function()
+				{
+					update_success = false;
+					returncount++;
+					alert('Update failed ki');
+				}
+			});
+			$.ajax({
+				url: "https://smoker.culinaryapparatus.com/api/smoker/1/parameters/kd",
+				type:'POST',
+				data:
+				{
+					value: kd 
+				},
+				success: function()
+				{	
+					update_success = update_success && true;
+					returncount++;
+					if (returncount == 3 && update_success){
+						alert('PID parameters updated');
+					}
+				},
+				fail: function()
+				{
+					update_success = false;
+					returncount++;
+					alert('Update failed kd');
 				}
 			});
 		});
