@@ -245,18 +245,61 @@ $(document).ready(function() {
 		});
 	}
 
+	function zeroPaddedToString(num,digits){
+		var resultString = ""
+		for (var i = 1; i < digits; i++){
+			if (num < Math.pow(10,i)){
+				resultString = resultString + "0";
+			}
+		}
+		return resultString + num.toString();
+	}
+
+	function formatRequestTime(time){
+		var year = time.getFullYear().toString();
+		var day = zeroPaddedToString(time.getDate(),2);
+		var month = zeroPaddedToString(time.getMonth()+1,2);
+		var hour = zeroPaddedToString(time.getHours(),2);
+		var minute = zeroPaddedToString(time.getMinutes(),2);
+		var second = zeroPaddedToString(time.getSeconds(),2);
+		var mseconds = zeroPaddedToString(time.getMilliseconds(),3);
+
+		return year + month + day + "-" + hour + ":" + minute + ":" + second + "." + mseconds;
+	}
+
 	// Calls the JSON
 	function updateArrays(){
 	// Get current time
 	var now = new Date();
 	var timeStamp;
 		// Smoker temp
-		$.getJSON(variableURL("tctemp"),function(result){
-			var tctemp_pct = result["value"];
-			timeStamp = new Date(result["time"]);
-			if (tctemp_pct <= 500 && tctemp_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))) {
-				tcArray.push({x: timeStamp, y: tctemp_pct});
-				document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp_pct,2) + " &deg;C";
+		var starttime;
+		var url;
+		if (tcArray.length > 0){
+			starttime = tcArray[tcArray.length - 1]['x'];
+			url = variableURL("tctemp") + "?start=" + formatRequestTime(starttime);
+		} else {
+			url = variableURL("tctemp");
+		}
+			
+		$.getJSON(url,function(result){
+			if ("result" in result) {
+				result = result["result"];
+				for (var i = 0; i < result.length; i++){
+					var tctemp_pct = result[i]["value"];
+					timeStamp = new Date(result[i]["time"]);
+					if (tctemp_pct <= 500 && tctemp_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))) {
+						tcArray.push({x: timeStamp, y: tctemp_pct});
+						document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp_pct,2) + " &deg;C";
+					}
+				}
+			} else {
+				var tctemp_pct = result["value"];
+				timeStamp = new Date(result["time"]);
+				if (tctemp_pct <= 500 && tctemp_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))) {
+					tcArray.push({x: timeStamp, y: tctemp_pct});
+					document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp_pct,2) + " &deg;C";
+				}
 			}
 		});
 
