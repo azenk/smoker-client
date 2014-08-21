@@ -7,6 +7,7 @@ $(document).ready(function() {
 	var foodArray = [];
 	var food2Array = [];
 	var damperArray = [];
+	var coldArray = [];
 	
 	var foodSetArray = [];
 	var foodBufferTemp;
@@ -19,6 +20,8 @@ $(document).ready(function() {
 	var bufferedKp;
 	var bufferedKi;
 	var bufferedKd;
+	var loadtime = new Date();
+	loadtime.setMinutes(loadtime.getMinutes() - 30);
 	
 	// Chart initialization
 	var tempChart = new CanvasJS.Chart("tempChartContainer",{
@@ -225,12 +228,22 @@ $(document).ready(function() {
 	}
 
 	// helper function to create URLs for JSON calls
-	function variableURL(variablename){
-		//var device = "48ff6b065067555023151787";
-		//var access_token = "1451c88ec0c225eb59e8474d3b986c595ca3d111";
-		//return "https://api.spark.io/v1/devices/".concat( device, "/", variablename, "?access_token=", access_token);
-		return "https://smoker.culinaryapparatus.com/api/values/1/".concat(variablename);
+	function variableURL(variablename,a){
+		var starttime;
+
+		if (typeof a != "undefined" && a.length > 0){
+			starttime = a[a.length - 1]['x'];
+		} else {
+			starttime = loadtime;
+		}
+
+		if (typeof a != "undefined"){
+			return "https://smoker.culinaryapparatus.com/api/values/1/".concat(variablename) + "?start=" + formatRequestTime(starttime);
+		} else {
+			return "https://smoker.culinaryapparatus.com/api/values/1/".concat(variablename);
+		}
 	}
+
 	function variableSmokerURL(variablename)
 	{
 		return "https://smoker.culinaryapparatus.com/api/smoker/1/".concat(variablename);
@@ -267,104 +280,73 @@ $(document).ready(function() {
 		return year + month + day + "-" + hour + ":" + minute + ":" + second + "." + mseconds;
 	}
 
+	function appendArray(a,result){
+				for (var i = 0; i < result.length; i++){
+					var val = result[i]["value"];
+					timeStamp = new Date(result[i]["time"]);
+					a.push({x: timeStamp, y: val});
+				}
+	}
+
 	// Calls the JSON
 	function updateArrays(){
 	// Get current time
 	var now = new Date();
 	var timeStamp;
 		// Smoker temp
-		var starttime;
-		var url;
-		if (tcArray.length > 0){
-			starttime = tcArray[tcArray.length - 1]['x'];
-			url = variableURL("tctemp") + "?start=" + formatRequestTime(starttime);
-		} else {
-			url = variableURL("tctemp");
-		}
-			
-		$.getJSON(url,function(result){
-			if ("result" in result) {
+		$.getJSON(variableURL("tctemp",tcArray),function(result){
 				result = result["result"];
-				for (var i = 0; i < result.length; i++){
-					var tctemp_pct = result[i]["value"];
-					timeStamp = new Date(result[i]["time"]);
-					if (tctemp_pct <= 500 && tctemp_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))) {
-						tcArray.push({x: timeStamp, y: tctemp_pct});
-						document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp_pct,2) + " &deg;C";
-					}
-				}
-			} else {
-				var tctemp_pct = result["value"];
-				timeStamp = new Date(result["time"]);
-				if (tctemp_pct <= 500 && tctemp_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))) {
-					tcArray.push({x: timeStamp, y: tctemp_pct});
-					document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp_pct,2) + " &deg;C";
-				}
-			}
+				appendArray(tcArray,result);
+				var tctemp = tcArray[tcArray.length - 1]['y'];
+				document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp,2) + " &deg;C";
 		});
 
 		// Fan output
-		$.getJSON(variableURL("output_pct"),function(result){
-			var output_pct = result["value"];
-			timeStamp = new Date(result["time"]);
-			if (output_pct <= 100 && output_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))){
-				fanArray.push({x: timeStamp, y: output_pct});
-			}
+		$.getJSON(variableURL("output_pct",fanArray),function(result){
+			appendArray(fanArray,result["result"]);
 		});
 
 		// Temperature setpoint
-		$.getJSON(variableURL("setpoint"),function(result){
-			var setpoint_pct = result["value"];
-			var timeStamp = new Date(result["time"]);
-			if (setpoint_pct <= 500 && setpoint_pct >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))){
-				spArray.push({x: timeStamp, y: setpoint_pct});
-				document.getElementById("setTemp").innerHTML = "Set temp: " + setpoint_pct + " &deg;C";
-			}
+		$.getJSON(variableURL("setpoint",spArray),function(result){
+			appendArray(spArray,result["result"]);
+			var setpoint = spArray[spArray.length - 1]['y'];
+			document.getElementById("setTemp").innerHTML = "Set temp: " + setpoint + " &deg;C";
 		});
 		
 		// Firebox temperature
-		$.getJSON(variableURL("firetemp"),function(result){
-			var firetemp_pct = result["value"];
-			timeStamp = new Date(result["time"]);
-			if (Math.abs(timeStamp - now) < (updateinterval * 10000)){
-			fireArray.push({x: timeStamp, y: firetemp_pct});}
-			});
+		$.getJSON(variableURL("firetemp",fireArray),function(result){
+			appendArray(fireArray,result["result"]);
+		});
 		
 		// Food temperatures
-		$.getJSON(variableURL("foodtemp1"),function(result){
-			var foodtemp1 = result["value"];
-			timeStamp = new Date(result["time"]);
-			if (foodtemp1 <= 500 && foodtemp1 >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))){
-				foodArray.push({x: timeStamp, y: foodtemp1});
-				document.getElementById("foodTemp").innerHTML = "Current food temp: " + precise_round(foodtemp1,2) + " &deg;C";
+		$.getJSON(variableURL("foodtemp1",foodArray),function(result){
+			appendArray(foodArray,result["result"]);
 				
-				//Set temp is held in cache, no ajax call needed
-				if (foodBufferTemp >= 0){
-					foodSetArray.push({x: timeStamp, y: foodBufferTemp});
-					}
+			//Set temp is held in cache, no ajax call needed
+			if (foodBufferTemp >= 0){
+				foodSetArray.push({x: now, y: foodBufferTemp});
 			}
+			var foodtemp1 = foodArray[foodArray.length - 1]['y'];
+			document.getElementById("foodTemp").innerHTML = "Current food temp: " + precise_round(foodtemp1,2) + " &deg;C";
 		});
-		$.getJSON(variableURL("foodtemp2"),function(result){
-			var foodtemp2 = result["value"];
-			var timeStamp = new Date(result["time"]);
-			if (foodtemp2 <= 500 && foodtemp2 >= 0 && (Math.abs(timeStamp - now) < (updateinterval * 10000))){
-				food2Array.push({x: timeStamp, y: foodtemp2});
-				document.getElementById("foodTemp2").innerHTML = "Current food 2 temp: " + precise_round(foodtemp2,2) + " &deg;C";
-			}
+		$.getJSON(variableURL("foodtemp2",food2Array),function(result){
+			appendArray(food2Array,result["result"]);
+			var foodtemp1 = food2Array[food2Array.length - 1]['y'];
+			document.getElementById("foodTemp2").innerHTML = "Current food 2 temp: " + precise_round(foodtemp2,2) + " &deg;C";
 		});
 		
 		// Enclosure temperature
-		$.getJSON(variableURL("coldtemp"),function(result){
-			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(result["value"],2) + " &deg;C";
+		$.getJSON(variableURL("coldtemp",coldArray),function(result){
+			appendArray(coldArray,result["result"]);
+			var coldtemp = coldArray[coldArray.length - 1]['y'];
+			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(coldtemp,2) + " &deg;C";
 		});
+		coldArray = [];
 		
 		// Damper setting
-		$.getJSON(variableURL("damper_pct_open"),function(result){
-			var damper_pct = result["value"];
-			var timeStamp = new Date(result["time"]);
-			if (Math.abs(timeStamp - now) < (updateinterval * 10000)){
-			damperArray.push({x: timeStamp, y: damper_pct});}
-			});
+		$.getJSON(variableURL("damper_pct_open",damperArray),function(result){
+			appendArray(damperArray,result["result"]);
+		});
 		
 		//cleanup
 		cleanArrays();
