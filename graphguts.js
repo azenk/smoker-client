@@ -331,7 +331,7 @@ $(document).ready(function() {
 		});
 		$.getJSON(variableURL("foodtemp2",food2Array),function(result){
 			appendArray(food2Array,result["result"]);
-			var foodtemp1 = food2Array[food2Array.length - 1]['y'];
+			var foodtemp2 = food2Array[food2Array.length - 1]['y'];
 			document.getElementById("foodTemp2").innerHTML = "Current food 2 temp: " + precise_round(foodtemp2,2) + " &deg;C";
 		});
 		
