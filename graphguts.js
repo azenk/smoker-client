@@ -355,27 +355,27 @@ $(document).ready(function() {
 	//cleanup function to prevent arrays from getting too big
 	function cleanArrays(){
 		var d = new Date();
-		if (tcArray.length > records && (d - tcArray[0]["x"]) > cleaninterval)
+		while (tcArray.length > records && (d - tcArray[0]["x"]) > cleaninterval)
 		{
 			tcArray.shift();
 		}
-		if (fanArray.length > records && (d - fanArray[0]["x"]) > cleaninterval)
+		while (fanArray.length > records && (d - fanArray[0]["x"]) > cleaninterval)
 		{
 			fanArray.shift();
 		}
-		if (spArray.length > records && (d - spArray[0]["x"]) > cleaninterval)
+		while (spArray.length > records && (d - spArray[0]["x"]) > cleaninterval)
 		{
 			spArray.shift();}
-		if (fireArray.length > records && (d - fireArray[0]["x"]) > cleaninterval)
+		while (fireArray.length > records && (d - fireArray[0]["x"]) > cleaninterval)
 		{
 			fireArray.shift();}
-		if (foodArray.length > records && (d - foodArray[0]["x"]) > cleaninterval){
+		while (foodArray.length > records && (d - foodArray[0]["x"]) > cleaninterval){
 			foodArray.shift();}
-		if (food2Array.length > records && (d - food2Array[0]["x"]) > cleaninterval){
+		while (food2Array.length > records && (d - food2Array[0]["x"]) > cleaninterval){
 			food2Array.shift();}
-		if (foodSetArray.length > records && (d - foodSetArray[0]["x"]) > cleaninterval){
+		while (foodSetArray.length > records && (d - foodSetArray[0]["x"]) > cleaninterval){
 			foodSetArray.shift();}
-		if (damperArray.length > records && (d-damperArray[0]["x"]) > cleaninterval){
+		while (damperArray.length > records && (d-damperArray[0]["x"]) > cleaninterval){
 			damperArray.shift();}
 		
 	}
