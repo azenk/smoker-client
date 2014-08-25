@@ -10,33 +10,43 @@
 	</head>
 	<body>
 		<div id="tempChartContainer" style="height:300px; width: 100%;"></div>
-		<div id="foodStatus">
-			<div id="batteryLabel">Battery Level</div><div id="batteryContainer">
-				<div id="batteryPercentage"></div>
-			</div>
-			<div id="foodTemp"></div>
-			<div id="foodTemp2"></div>
-			<form name="foodTempForm" action="" method="" id="foodTempForm" class="clearBoth">
-				Setpoint for Food: <input name="foodtemparg" type="text" class="inputClass"/>
-				<input type="submit" id="foodSubmit"/>
-			</form>
-		</div>
 		<div class="clearBoth"></div>
 		<div id="currentStatus">
-			<div id="tcTemp"></div>
-			<div id="coldTemp"></div>
-			<div id="setTemp"></div>
+			<div id="tcTemp" class="valuebox"></div>
+			<div id="setTemp" class="valuebox"></div>
+			<div id="foodTemp" class="valuebox"></div>
+			<div id="foodTemp2" class="valuebox"></div>
+			<div id="coldTemp" class="valuebox"></div>
+			<div class="valuebox">
+			<div id="batteryLabel" class="title">Battery Level</div>
+			<div class="value">
+				<div id="batteryContainer">
+					<div id="batteryPercentage"></div>
+				</div>
+			</div>
+			</div>
 		</div>
-		<form name="setTempForm" action="" method="" id="setTempForm">
-			New Setpoint: <input name="args" type="text" class="inputClass"/>
+		<div class="valuebox"><div class="title">Smoker Setpoint</div><div class="value"><form name="setTempForm" action="" method="" id="setTempForm">
+			<input name="args" type="text" class="inputClass"/>
 			<input type="submit" id="tempSubmit" />
-		</form>
+		</form></div>
+		</div>
+			<div class="valuebox">
+			<div class="title">Food Setpoint</div>
+			<div class="value">
+			<form name="foodTempForm" action="" method="" id="foodTempForm" class="clearBoth">
+				<input name="foodtemparg" type="text" class="inputClass"/>
+				<input type="submit" id="foodSubmit"/>
+			</form>
+			</div>
+			</div>
+		<div class="valuebox"><div class="title">Pid Parameters</div><div class="value">
 		<form name="pidParmForm" action="" method="" id="pidParmForm">
 			Kp: <input name="kpArg" type="text" class="inputClass"/>
 			Ki: <input name="kiArg" type="text" class="inputClass"/>
 			Kd: <input name="kdArg" type="text" class="inputClass"/>
 			<input type="submit" id="pidSubmit" />
-		</form>
+		</form></div></div>
 		<div class="clearBoth"></div>
 		<div id="fanChartContainer" style="height:300px; width:100%;"></div>
 	</body>

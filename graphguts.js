@@ -253,7 +253,7 @@ $(document).ready(function() {
 	{
 		$.getJSON(variableSmokerURL("power/batterycharge"),function(result){
 			var battery_pct = result["value"];
-			document.getElementById("batteryPercentage").setAttribute("style","width:" + battery_pct + "px");
+			document.getElementById("batteryPercentage").setAttribute("style","width:" + battery_pct + "%");
 			document.getElementById("batteryPercentage").style.width = battery_pct + " px";
 		});
 	}
@@ -288,6 +288,10 @@ $(document).ready(function() {
 				}
 	}
 
+	function valuebox(title,value){
+				return "<div class=\"title\">" + title + "</div><div class=\"value\">" +  value + "</div>";
+	}
+
 	// Calls the JSON
 	function updateArrays(){
 	// Get current time
@@ -298,7 +302,7 @@ $(document).ready(function() {
 				result = result["result"];
 				appendArray(tcArray,result);
 				var tctemp = tcArray[tcArray.length - 1]['y'];
-				document.getElementById("tcTemp").innerHTML = "Current smoker temp: " +  precise_round(tctemp,2) + " &deg;C";
+				document.getElementById("tcTemp").innerHTML = valuebox("Smoker Temperature", precise_round(tctemp,2) + " &deg;C");
 		});
 
 		// Fan output
@@ -310,7 +314,7 @@ $(document).ready(function() {
 		$.getJSON(variableURL("setpoint",spArray),function(result){
 			appendArray(spArray,result["result"]);
 			var setpoint = spArray[spArray.length - 1]['y'];
-			document.getElementById("setTemp").innerHTML = "Set temp: " + setpoint + " &deg;C";
+			document.getElementById("setTemp").innerHTML = valuebox("Smoker Setpoint", setpoint + " &deg;C");
 		});
 		
 		// Firebox temperature
@@ -326,20 +330,28 @@ $(document).ready(function() {
 			if (foodBufferTemp >= 0){
 				foodSetArray.push({x: now, y: foodBufferTemp});
 			}
-			var foodtemp1 = foodArray[foodArray.length - 1]['y'];
-			document.getElementById("foodTemp").innerHTML = "Current food temp: " + precise_round(foodtemp1,2) + " &deg;C";
+			if (foodArray.length > 0) {
+				var foodtemp1 = foodArray[foodArray.length - 1]['y'];
+				document.getElementById("foodTemp").innerHTML = valuebox("Food 1", precise_round(foodtemp1,2) + " &deg;C");
+			} else {
+				document.getElementById("foodTemp").innerHTML = valuebox("Food 1",  "-- &deg;C");
+			}
 		});
 		$.getJSON(variableURL("foodtemp2",food2Array),function(result){
 			appendArray(food2Array,result["result"]);
-			var foodtemp2 = food2Array[food2Array.length - 1]['y'];
-			document.getElementById("foodTemp2").innerHTML = "Current food 2 temp: " + precise_round(foodtemp2,2) + " &deg;C";
+			if (food2Array.length > 0) {
+				var foodtemp2 = food2Array[food2Array.length - 1]['y'];
+				document.getElementById("foodTemp2").innerHTML = valuebox( "Food 2" , precise_round(foodtemp2,2) + " &deg;C");
+			} else {
+				document.getElementById("foodTemp2").innerHTML = valuebox("Food 2", "-- &deg;C");
+			}
 		});
 		
 		// Enclosure temperature
 		$.getJSON(variableURL("coldtemp",coldArray),function(result){
 			appendArray(coldArray,result["result"]);
 			var coldtemp = coldArray[coldArray.length - 1]['y'];
-			document.getElementById("coldTemp").innerHTML = "Enclosure temp: " + precise_round(coldtemp,2) + " &deg;C";
+			document.getElementById("coldTemp").innerHTML = valuebox("Enclosure temp", precise_round(coldtemp,2) + " &deg;C");
 		});
 		coldArray = [];
 		
