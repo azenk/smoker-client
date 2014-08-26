@@ -297,6 +297,19 @@ $(document).ready(function() {
 	// Get current time
 	var now = new Date();
 	var timeStamp;
+		$.getJSON("/api/user/info",function(result){
+			if (result["logged_in"]){
+				if (result["update"]){
+					document.getElementById("parameterforms").style.display = "";
+				} else {
+					document.getElementById("parameterforms").style.display = "none";
+				}
+				document.getElementById("username").innerHTML = "Logged in as " + result["name"] + " (<a href=\"/api/logout\">logout</a>)";
+			} else {
+				document.getElementById("parameterforms").style.display = "none";
+				document.getElementById("username").innerHTML = "<a href=\"/api/login\">Click here to login</a>";
+			}
+		});
 		// Smoker temp
 		$.getJSON(variableURL("tctemp",tcArray),function(result){
 				result = result["result"];

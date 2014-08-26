@@ -2,10 +2,11 @@ body{font-family:"Tahoma","Geneva",sans-serif;} #currentStatus{min-width: 100%; 
 .valuebox{border:1px solid gray;text-align: center; display: inline-block;margin:0.1em; white-space: nowrap; }
 .valuebox .title{background-color: #C0C0C0; color: black;font-weight: bold;padding: 0.25em 1em 0.25em 1em;}
 .valuebox .value{font-weight: normal;}
+#username {font-size: 0.6em; color: gray}
 @media all and (min-width: 1050px){
 	#currentStatus {} 
 	.statusrow { width: 100%; display: inline-block}
-	.valuebox { float: left; min-width:15%; display:block; font-size: 0.8em }
+	.valuebox { float: left; min-width:13%; display:block; font-size: 0.8em }
 	div.valuebox:last-child {float: none; overflow:hidden; }
 }
 @media all and (max-width: 1050px) and ( min-width:750px){
