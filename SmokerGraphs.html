@@ -9,9 +9,10 @@
 		<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
 	</head>
 	<body>
-		<div id="tempChartContainer" style="height:300px; width: 100%;"></div>
+		<div style="border: 1px solid gray;">
 		<div class="clearBoth"></div>
 		<div id="currentStatus">
+			<div class="statusrow">
 			<div id="tcTemp" class="valuebox"></div>
 			<div id="setTemp" class="valuebox"></div>
 			<div id="foodTemp" class="valuebox"></div>
@@ -25,7 +26,8 @@
 				</div>
 			</div>
 			</div>
-		</div>
+			</div>
+			<div class="statusrow">
 		<div class="valuebox"><div class="title">Smoker Setpoint</div><div class="value"><form name="setTempForm" action="" method="" id="setTempForm">
 			<input name="args" type="text" class="inputClass"/>
 			<input type="submit" id="tempSubmit" />
@@ -47,7 +49,11 @@
 			Kd: <input name="kdArg" type="text" class="inputClass"/>
 			<input type="submit" id="pidSubmit" />
 		</form></div></div>
-		<div class="clearBoth"></div>
-		<div id="fanChartContainer" style="height:300px; width:100%;"></div>
+		</div>
+			</div>
+		<div id="tempChartContainer" style="height:250px; width: 97%;"></div>
+		<div style="border-top: 1px dotted gray; width:100%" ></div>
+		<div id="fanChartContainer" style="height:250px; width:100%;"></div>
+		</div>
 	</body>
 </html>
