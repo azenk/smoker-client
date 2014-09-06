@@ -9,6 +9,24 @@ $(document).ready(function() {
 	var damperArray = [];
 	var coldArray = [];
 	
+	function asem(fireFunc,initLock){
+        	if(initLock)
+                	this.lock=initLock;
+        	else
+        				this.lock=0;
+					this.func = fireFunc;
+	}
+ 
+	asem.prototype.v = function(){
+		this.lock++;
+	}
+ 
+	asem.prototype.p = function(){
+		this.lock--;
+		if(this.lock==0 && this.func)
+			this.func();
+	}
+
 	var foodSetArray = [];
 	var foodBufferTemp;
 
@@ -21,7 +39,9 @@ $(document).ready(function() {
 	var bufferedKi;
 	var bufferedKd;
 	var loadtime = new Date();
-	loadtime.setMinutes(loadtime.getMinutes() - 30);
+	loadtime.setMinutes(loadtime.getMinutes() - 60);
+
+	var chartLock = new asem(updateCharts);
 	
 	// Chart initialization
 	var tempChart = new CanvasJS.Chart("tempChartContainer",{
@@ -217,13 +237,11 @@ $(document).ready(function() {
 	
 	function init(){
 			updateArrays();
-			updateCharts();
 			updatePID();
 			updateBattery();
 			
 			setInterval(updatePID, slowUpdateInterval * 1000);
 			setInterval(updateBattery, slowUpdateInterval * 1000);
-			setInterval(updateCharts, updateinterval * 1000);
 			setInterval(updateArrays, updateinterval * 1000);
 	}
 
@@ -311,31 +329,40 @@ $(document).ready(function() {
 			}
 		});
 		// Smoker temp
+		chartLock.v();
 		$.getJSON(variableURL("tctemp",tcArray),function(result){
 				result = result["result"];
 				appendArray(tcArray,result);
 				var tctemp = tcArray[tcArray.length - 1]['y'];
 				document.getElementById("tcTemp").innerHTML = valuebox("Smoker Temperature", precise_round(tctemp,2) + " &deg;C");
+			chartLock.p();
 		});
 
 		// Fan output
+		chartLock.v();
 		$.getJSON(variableURL("output_pct",fanArray),function(result){
 			appendArray(fanArray,result["result"]);
+			chartLock.p();
 		});
 
 		// Temperature setpoint
+		chartLock.v();
 		$.getJSON(variableURL("setpoint",spArray),function(result){
 			appendArray(spArray,result["result"]);
 			var setpoint = spArray[spArray.length - 1]['y'];
 			document.getElementById("setTemp").innerHTML = valuebox("Smoker Setpoint", setpoint + " &deg;C");
+			chartLock.p();
 		});
 		
 		// Firebox temperature
+		chartLock.v();
 		$.getJSON(variableURL("firetemp",fireArray),function(result){
 			appendArray(fireArray,result["result"]);
+			chartLock.p();
 		});
 		
 		// Food temperatures
+		chartLock.v();
 		$.getJSON(variableURL("foodtemp1",foodArray),function(result){
 			appendArray(foodArray,result["result"]);
 				
@@ -349,7 +376,9 @@ $(document).ready(function() {
 			} else {
 				document.getElementById("foodTemp").innerHTML = valuebox("Food 1",  "-- &deg;C");
 			}
+			chartLock.p();
 		});
+		chartLock.v();
 		$.getJSON(variableURL("foodtemp2",food2Array),function(result){
 			appendArray(food2Array,result["result"]);
 			if (food2Array.length > 0) {
@@ -358,19 +387,24 @@ $(document).ready(function() {
 			} else {
 				document.getElementById("foodTemp2").innerHTML = valuebox("Food 2", "-- &deg;C");
 			}
+			chartLock.p();
 		});
 		
 		// Enclosure temperature
+		chartLock.v();
 		$.getJSON(variableURL("coldtemp",coldArray),function(result){
 			appendArray(coldArray,result["result"]);
 			var coldtemp = coldArray[coldArray.length - 1]['y'];
 			document.getElementById("coldTemp").innerHTML = valuebox("Enclosure temp", precise_round(coldtemp,2) + " &deg;C");
+			chartLock.p();
 		});
 		coldArray = [];
 		
 		// Damper setting
+		chartLock.v();
 		$.getJSON(variableURL("damper_pct_open",damperArray),function(result){
 			appendArray(damperArray,result["result"]);
+			chartLock.p();
 		});
 		
 		//cleanup
