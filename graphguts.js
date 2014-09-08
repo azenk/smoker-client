@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 	var records = 1;
 	var cleaninterval = 60*60*1000;
-	var updateinterval = 5.0;
+	var updateinterval = 2.5;
 	var slowUpdateInterval = 60.0;
 
 	var bufferedKp;
