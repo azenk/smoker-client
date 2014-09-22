@@ -18,11 +18,13 @@ $(document).ready(function() {
 	}
  
 	asem.prototype.v = function(){
-		this.lock++;
+		if (this.lock < 8)
+			this.lock++;
 	}
  
 	asem.prototype.p = function(){
-		this.lock--;
+		if (this.lock > 0)
+			this.lock--;
 		if(this.lock==0 && this.func)
 			this.func();
 	}
