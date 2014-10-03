@@ -1,4 +1,9 @@
-body{font-family:"Tahoma","Geneva",sans-serif;} #currentStatus{min-width: 100%; text-align: center } .inputClass {width:50px; padding:1px;} .clearBoth {clear:both} #batteryContainer{width:97%;height:0.75em; border:1px solid black;vertical-align:middle;display:inline-block;} #batteryPercentage{height:100%;background-color:lime;}
+body{font-family:"Tahoma","Geneva",sans-serif;}
+#currentStatus{min-width: 100%; text-align: center }
+.inputClass {width:50px; padding:1px;}
+.clearBoth {clear:both}
+#batteryContainer{width:97%;height:0.75em; border:1px solid black;vertical-align:middle;display:inline-block;}
+#batteryPercentage{height:100%;background-color:lime;}
 .valuebox{border:1px solid gray;text-align: center; display: inline-block;margin:0.1em; white-space: nowrap; }
 .valuebox .title{background-color: #C0C0C0; color: black;font-weight: bold;padding: 0.25em 1em 0.25em 1em;}
 .valuebox .value{font-weight: normal;}
@@ -17,7 +22,7 @@ body{font-family:"Tahoma","Geneva",sans-serif;} #currentStatus{min-width: 100%; 
 	#currentStatus { display: inline-block;} 
 	.valuebox { min-width: 48%; font-size: 0.8em }
 }
-@media all and (max-width: 400px) and ( min-width:0px){
+@media all and (max-width: 400px) and ( min-width: 0){
 	.valuebox .title { font-size: 0.6em }
 	#currentStatus { display: inline-block; } 
 	.valuebox { min-width: 48%; white-space: normal;font-size:0.8em }
