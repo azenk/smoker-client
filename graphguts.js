@@ -119,7 +119,7 @@ $(document).ready(function() {
 			var temp = document.forms["setTempForm"]["args"].value;
 			
 			// only submit if the temperature is above 0 C
-			if (parseFloat(temp) > 0 ){
+			if (parseFloat(temp) > -40 ){
 				$.ajax({
 					url: "https://smoker.culinaryapparatus.com/api/smoker/1/parameters/setpoint",
 					type:'POST',
