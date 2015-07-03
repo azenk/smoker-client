@@ -2,6 +2,7 @@ $(document).ready(function() {
 	// Initialize arrays & variables
 	var tcArray = [];
 	var spArray = [];
+	var wbArray = [];
 	var fanArray = [];
 	var fireArray = [];
 	var foodArray = [];
@@ -59,6 +60,11 @@ $(document).ready(function() {
 			showInLegend: true, 
 			legendText: "Smoke Chamber",
 			dataPoints : tcArray
+		},{
+			type: "line",
+			showInLegend: true, 
+			legendText: "Wet Bulb",
+			dataPoints : wbArray
 		},{
 			type: "line",
 			showInLegend: true, 
@@ -337,6 +343,15 @@ $(document).ready(function() {
 				appendArray(tcArray,result);
 				var tctemp = tcArray[tcArray.length - 1]['y'];
 				document.getElementById("tcTemp").innerHTML = valuebox("Smoker Temperature", precise_round(tctemp,2) + " &deg;C");
+			chartLock.p();
+		});
+		// Wet bulb temp
+		chartLock.v();
+		$.getJSON(variableURL("tctemp4",wbArray),function(result){
+				result = result["result"];
+				appendArray(wbArray,result);
+				var wbtemp = wbArray[tcArray.length - 1]['y'];
+				document.getElementById("wbTemp").innerHTML = valuebox("Wet Bulb Temperature", precise_round(wbtemp,2) + " &deg;C");
 			chartLock.p();
 		});
 
